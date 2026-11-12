@@ -1,8 +1,7 @@
 import {useState, useEffect,useRef} from 'react'
 import IngredientsList from './sub-comp/IngredientsList'
 import AiRecipe from './sub-comp/AiRecipe'
-import { getRecipeFromGemini } from '../../ai'
-import { Behavior } from '@google/genai'
+import { getRecipeFromGroq } from '../../ai'
 
 export default function Main(){
     const [ingredients, setIngredients] = useState([])
@@ -37,7 +36,7 @@ export default function Main(){
     const [response, setResponse] = useState('')
     const recipeSection = useRef(null)
     useEffect(()=>{
-        (recipeShown && recipeSection.current != null) && recipeSection.scrollIntoView({behavior:'smooth'})
+        (recipeShown && recipeSection.current != null) && recipeSection.current.scrollIntoView({behavior:'smooth'})
     },[response])
     
     // handle the error response throught Gemini API 
@@ -49,7 +48,7 @@ export default function Main(){
         setError('')
         setResponse('')
         try {
-            const recipe = await getRecipeFromGemini(ingredients)
+            const recipe = await getRecipeFromGroq(ingredients)
             if (!recipe?.trim()) throw new Error('Gemini returned an empty response.')
             setResponse(recipe)
         } catch (err) {
