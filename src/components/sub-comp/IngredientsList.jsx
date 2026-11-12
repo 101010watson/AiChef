@@ -42,7 +42,7 @@ export default function IngredientsList(props){
                          
                     }
                 </div>
-                <button onClick={props.onClick} disabled={props.isLoading}>
+                <button ref={props.ref} onClick={props.onClick} disabled={props.isLoading}>
                     {props.isLoading ? 'Generating...' : 'Get a recipe'}
                 </button>
             </div>}

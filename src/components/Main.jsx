@@ -1,7 +1,8 @@
-import {useState} from 'react'
+import {useState, useEffect,useRef} from 'react'
 import IngredientsList from './sub-comp/IngredientsList'
 import AiRecipe from './sub-comp/AiRecipe'
 import { getRecipeFromGemini } from '../../ai'
+import { Behavior } from '@google/genai'
 
 export default function Main(){
     const [ingredients, setIngredients] = useState([])
@@ -31,8 +32,13 @@ export default function Main(){
         setIngredients(prevIng => prevIng.filter(ing => ing!==ingToRemove))
     }
 
+    
     const [recipeShown,setRecipeShown] = useState(false)
     const [response, setResponse] = useState('')
+    const recipeSection = useRef(null)
+    useEffect(()=>{
+        (recipeShown && recipeSection.current != null) && recipeSection.scrollIntoView({behavior:'smooth'})
+    },[response])
     
     // handle the error response throught Gemini API 
     const [isLoading, setIsLoading] = useState(false)
@@ -78,6 +84,7 @@ export default function Main(){
                 isLoading={isLoading}
                 remIng={remIng}
                 recipeShown={recipeShown}
+                ref={recipeSection}
             />
 
             <AiRecipe response={response} recipeShown={recipeShown} isLoading={isLoading} error={error}/>
